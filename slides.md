@@ -37,7 +37,7 @@ hash: true
 
     test.addEventListener('canplaythrough', () => {
       // bgm.mp3 exists → use it, keep credit hidden
-      audio.src = 'media/audio/bgm.mp3';
+      audio.src = 'media/audio/bgm.m4a';
     }, { once: true });
 
     test.addEventListener('error', () => {
@@ -127,6 +127,26 @@ The work done $W$ is positive when the system expands against an external pressu
   scrolling="no">
 </iframe>
 :::
+::::
+
+---
+
+:::: {.columns}
+::: {.column width="50%"}
+### Distribution of Math Scores
+
+This histogram displays the frequency distribution of Math scores from the `bigclass` dataset. It provides insight into the spread and central tendency of student performance in mathematics. The bins are set to a width of 50 to show the grouping of scores.
+:::
+
+::: {.column width="50%"}
+<iframe 
+  data-src='media/plots/math_scores_histogram.html' 
+  width='100%' 
+  height='500px' 
+  style='border:none;'>
+</iframe>
+:::
+
 ::::
 
 ---
