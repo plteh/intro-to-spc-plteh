@@ -188,15 +188,35 @@ function toggleNavMenu() {
 </script>
 
 <!-- =============================== -->
-<!-- ⭐ FULLSCREEN PLOTLY SUPPORT ⭐ -->
+<!-- ⭐ BROWSER-FILL PLOTLY OVERLAY ⭐ -->
 <!-- =============================== -->
 
 <style>
+  #plot-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: white;
+    z-index: 5000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  #plot-overlay iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
   .plot-container {
     position: relative;
   }
 
-  .fullscreen-btn {
+  .browserfill-btn {
     position: absolute;
     top: 8px;
     right: 8px;
@@ -209,13 +229,17 @@ function toggleNavMenu() {
     border-radius: 4px;
   }
 
-  .fullscreen-btn:hover {
+  .browserfill-btn:hover {
     background: #f0f0f0;
   }
 </style>
 
+<div id="plot-overlay"></div>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  const overlay = document.getElementById('plot-overlay');
+
   document.querySelectorAll("iframe[data-src*='media/plots/']").forEach(frame => {
     if (frame.parentElement.classList.contains('plot-container')) return;
 
@@ -225,15 +249,21 @@ document.addEventListener('DOMContentLoaded', () => {
     wrapper.appendChild(frame);
 
     const btn = document.createElement('button');
-    btn.className = 'fullscreen-btn';
-    btn.innerText = '⛶ Fullscreen';
+    btn.className = 'browserfill-btn';
+    btn.innerText = '⛶ View Large';
     wrapper.appendChild(btn);
 
     btn.addEventListener('click', () => {
-      if (frame.requestFullscreen) frame.requestFullscreen();
-      else if (frame.webkitRequestFullscreen) frame.webkitRequestFullscreen();
-      else if (frame.msRequestFullscreen) frame.msRequestFullscreen();
+      overlay.innerHTML = '';
+      const clone = frame.cloneNode(true);
+      overlay.appendChild(clone);
+      overlay.style.display = 'flex';
     });
+  });
+
+  overlay.addEventListener('click', () => {
+    overlay.style.display = 'none';
+    overlay.innerHTML = '';
   });
 });
 </script>
