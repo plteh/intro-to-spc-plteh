@@ -192,7 +192,6 @@ function toggleNavMenu() {
 <!-- =============================== -->
 
 <style>
-  /* Darkened background + fade animations */
   #media-overlay {
     position: fixed;
     top: 0;
@@ -218,7 +217,6 @@ function toggleNavMenu() {
     opacity: 0;
   }
 
-  /* Centered modal box */
   #media-overlay .overlay-frame-wrapper {
     width: 90vw;
     height: 90vh;
@@ -238,7 +236,6 @@ function toggleNavMenu() {
     border: none;
   }
 
-  /* Close button */
   #media-overlay .close-btn {
     position: absolute;
     top: 8px;
@@ -256,10 +253,17 @@ function toggleNavMenu() {
     background: #f0f0f0;
   }
 
-  /* Hover-only enlarge button */
   .media-container {
     position: relative;
-    display: inline-block;
+    display: block;
+    width: 100%;
+  }
+
+  .media-container > iframe,
+  .media-container > img,
+  .media-container > video {
+    display: block;
+    width: 100%;
   }
 
   .viewlarge-btn {
@@ -288,7 +292,6 @@ function toggleNavMenu() {
 document.addEventListener('DOMContentLoaded', () => {
   const overlay = document.getElementById('media-overlay');
 
-  /* Helper: open overlay with given element */
   function openOverlay(element) {
     overlay.innerHTML = '';
 
@@ -301,17 +304,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const clone = element.cloneNode(true);
 
+    // For lazy-loaded Reveal videos/iframes using data-src
+    if (clone.tagName === 'VIDEO' && clone.dataset.src && !clone.src) {
+      clone.src = clone.dataset.src;
+      clone.removeAttribute('data-src');
+      clone.setAttribute('controls', 'controls');
+    }
+    if (clone.tagName === 'IFRAME' && clone.dataset.src && !clone.src) {
+      clone.src = clone.dataset.src;
+      clone.removeAttribute('data-src');
+    }
+
     frameWrapper.appendChild(closeBtn);
     frameWrapper.appendChild(clone);
     overlay.appendChild(frameWrapper);
 
     overlay.classList.remove('hidden');
-    overlay.classList.add('visible');
+    overlay.style.display = 'flex';
+    requestAnimationFrame(() => {
+      overlay.classList.add('visible');
+    });
 
     closeBtn.addEventListener('click', closeOverlay);
   }
 
-  /* Helper: close overlay with fade-out */
   function closeOverlay() {
     overlay.classList.remove('visible');
     overlay.classList.add('hidden');
@@ -321,34 +337,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 250);
   }
 
-  /* ESC key closes overlay */
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && overlay.classList.contains('visible')) {
       closeOverlay();
     }
   });
 
-  /* Click outside closes overlay */
   overlay.addEventListener('click', e => {
     if (e.target === overlay) closeOverlay();
   });
 
-  /* Wrap Plotly iframes */
-  document.querySelectorAll("iframe[data-src*='media/plots/']").forEach(frame => {
-    wrapMedia(frame);
-  });
-
-  /* Wrap images */
-  document.querySelectorAll("img[src*='media/pics/']").forEach(img => {
-    wrapMedia(img);
-  });
-
-  /* Wrap videos */
-  document.querySelectorAll("video[data-src*='media/videos/']").forEach(video => {
-    wrapMedia(video);
-  });
-
-  /* Wrap media with hover button */
   function wrapMedia(element) {
     if (element.parentElement.classList.contains('media-container')) return;
 
@@ -365,9 +363,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     btn.addEventListener('click', e => {
       e.stopPropagation();
-      overlay.style.display = 'flex';
       openOverlay(element);
     });
   }
+
+  // Plotly iframes
+  document.querySelectorAll("iframe[data-src*='media/plots/'], iframe[src*='media/plots/']").forEach(frame => {
+    wrapMedia(frame);
+  });
+
+  // Images (including title slide)
+  document.querySelectorAll("img").forEach(img => {
+    wrapMedia(img);
+  });
+
+  // Videos (Reveal uses data-src)
+  document.querySelectorAll("video, video[data-src]").forEach(video => {
+    wrapMedia(video);
+  });
 });
 </script>
