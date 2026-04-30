@@ -235,41 +235,58 @@
   </script>
 
   <!-- =============================== -->
-  <!-- ⭐ IMPROVED BROWSER-FILL PLOTLY OVERLAY ⭐ -->
+  <!-- ⭐ UNIVERSAL BROWSER-FILL OVERLAY (PLOTS + IMAGES + VIDEOS) ⭐ -->
   <!-- =============================== -->
 
   <style>
-    #plot-overlay {
+    /* Darkened background + fade animations */
+    #media-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(255,255,255,0.95);
+      background: rgba(0,0,0,0.55);
       z-index: 5000;
       display: none;
       justify-content: center;
       align-items: center;
       padding: 20px;
+      opacity: 0;
+      transition: opacity 0.25s ease-out;
     }
 
-    #plot-overlay .overlay-frame-wrapper {
+    #media-overlay.visible {
+      display: flex;
+      opacity: 1;
+    }
+
+    #media-overlay.hidden {
+      opacity: 0;
+    }
+
+    /* Centered modal box */
+    #media-overlay .overlay-frame-wrapper {
       width: 90vw;
       height: 90vh;
       background: white;
-      box-shadow: 0 0 20px rgba(0,0,0,0.25);
+      box-shadow: 0 0 25px rgba(0,0,0,0.35);
       position: relative;
       border-radius: 6px;
       overflow: hidden;
     }
 
-    #plot-overlay iframe {
+    #media-overlay iframe,
+    #media-overlay img,
+    #media-overlay video {
       width: 100%;
       height: 100%;
+      object-fit: contain;
       border: none;
     }
 
-    #plot-overlay .close-btn {
+    /* Close button */
+    #media-overlay .close-btn {
       position: absolute;
       top: 8px;
       right: 12px;
@@ -282,15 +299,17 @@
       border-radius: 4px;
     }
 
-    #plot-overlay .close-btn:hover {
+    #media-overlay .close-btn:hover {
       background: #f0f0f0;
     }
 
-    .plot-container {
+    /* Hover-only enlarge button */
+    .media-container {
       position: relative;
+      display: inline-block;
     }
 
-    .browserfill-btn {
+    .viewlarge-btn {
       position: absolute;
       top: 8px;
       right: 8px;
@@ -301,94 +320,102 @@
       font-size: 14px;
       cursor: pointer;
       border-radius: 4px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
     }
 
-    .browserfill-btn:hover {
-      background: #f0f0f0;
+    .media-container:hover .viewlarge-btn {
+      opacity: 1;
     }
   </style>
 
-  <div id="plot-overlay"></div>
+  <div id="media-overlay"></div>
 
   <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const overlay = document.getElementById('plot-overlay');
+    const overlay = document.getElementById('media-overlay');
 
-    document.querySelectorAll("iframe[data-src*='media/plots/']").forEach(frame => {
-      if (frame.parentElement.classList.contains('plot-container')) return;
+    /* Helper: open overlay with given element */
+    function openOverlay(element) {
+      overlay.innerHTML = '';
 
-      const wrapper = document.createElement('div');
-      wrapper.className = 'plot-container';
-      frame.parentNode.insertBefore(wrapper, frame);
-      wrapper.appendChild(frame);
+      const frameWrapper = document.createElement('div');
+      frameWrapper.className = 'overlay-frame-wrapper';
 
-      const btn = document.createElement('button');
-      btn.className = 'browserfill-btn';
-      btn.innerText = '⛶ View Large';
-      wrapper.appendChild(btn);
+      const closeBtn = document.createElement('button');
+      closeBtn.className = 'close-btn';
+      closeBtn.innerText = '✕ Close';
 
-      btn.addEventListener('click', () => {
+      const clone = element.cloneNode(true);
+
+      frameWrapper.appendChild(closeBtn);
+      frameWrapper.appendChild(clone);
+      overlay.appendChild(frameWrapper);
+
+      overlay.classList.remove('hidden');
+      overlay.classList.add('visible');
+
+      closeBtn.addEventListener('click', closeOverlay);
+    }
+
+    /* Helper: close overlay with fade-out */
+    function closeOverlay() {
+      overlay.classList.remove('visible');
+      overlay.classList.add('hidden');
+      setTimeout(() => {
+        overlay.style.display = 'none';
         overlay.innerHTML = '';
-
-        const frameWrapper = document.createElement('div');
-        frameWrapper.className = 'overlay-frame-wrapper';
-
-        const closeBtn = document.createElement('button');
-        closeBtn.className = 'close-btn';
-        closeBtn.innerText = '✕ Close';
-
-        const clone = frame.cloneNode(true);
-
-        frameWrapper.appendChild(closeBtn);
-        frameWrapper.appendChild(clone);
-        overlay.appendChild(frameWrapper);
-
-        overlay.style.display = 'flex';
-
-        closeBtn.addEventListener('click', () => {
-          overlay.style.display = 'none';
-          overlay.innerHTML = '';
-        });
-      });
-    });
-  });
-  </script>
-
-  <style>
-    /* Fade‑in animation for overlay */
-    #plot-overlay.fade-in {
-      animation: fadeInOverlay 0.25s ease-out;
+      }, 250);
     }
-
-    @keyframes fadeInOverlay {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-  </style>
-
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-
-    const overlay = document.getElementById('plot-overlay');
 
     /* ESC key closes overlay */
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && overlay.style.display === 'flex') {
-        overlay.style.display = 'none';
-        overlay.innerHTML = '';
-        overlay.classList.remove('fade-in');
+      if (e.key === 'Escape' && overlay.classList.contains('visible')) {
+        closeOverlay();
       }
     });
 
-    /* Add fade‑in class whenever overlay is shown */
-    const observer = new MutationObserver(() => {
-      if (overlay.style.display === 'flex') {
-        overlay.classList.add('fade-in');
-      }
+    /* Click outside closes overlay */
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) closeOverlay();
     });
 
-    observer.observe(overlay, { attributes: true, attributeFilter: ['style'] });
+    /* Wrap Plotly iframes */
+    document.querySelectorAll("iframe[data-src*='media/plots/']").forEach(frame => {
+      wrapMedia(frame);
+    });
 
+    /* Wrap images */
+    document.querySelectorAll("img[src*='media/pics/']").forEach(img => {
+      wrapMedia(img);
+    });
+
+    /* Wrap videos */
+    document.querySelectorAll("video[data-src*='media/videos/']").forEach(video => {
+      wrapMedia(video);
+    });
+
+    /* Wrap media with hover button */
+    function wrapMedia(element) {
+      if (element.parentElement.classList.contains('media-container')) return;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'media-container';
+
+      element.parentNode.insertBefore(wrapper, element);
+      wrapper.appendChild(element);
+
+      const btn = document.createElement('button');
+      btn.className = 'viewlarge-btn';
+      btn.innerText = '⛶ View Large';
+      wrapper.appendChild(btn);
+
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        overlay.style.display = 'flex';
+        openOverlay(element);
+      });
+    }
   });
   </script>
 </head>
