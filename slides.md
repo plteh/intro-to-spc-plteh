@@ -151,5 +151,45 @@ This histogram displays the frequency distribution of Math scores from the `bigc
 
 ---
 
+:::: {.columns}
+::: {.column width="50%"}
+### Math Scores Boxplot
+
+This boxplot illustrates the distribution of Math scores, showing the median, quartiles, and potential outliers. It complements the histogram by providing a different perspective on the score spread.
+:::
+
+::: {.column width="50%"}
+<iframe 
+  data-src='media/plots/math_boxplot.html' 
+  width='100%' 
+  height='500px' 
+  style='border:none;'>
+</iframe>
+:::
+
+::::
+
+---
+
+:::: {.columns}
+::: {.column width="50%"}
+### Verbal Scores Boxplot
+
+This boxplot visualizes the distribution of Verbal scores, providing insights into their central tendency, variability, and any extreme values. It offers a quick summary of the score distribution.
+:::
+
+::: {.column width="50%"}
+<iframe 
+  data-src='media/plots/verbal_boxplot.html' 
+  width='100%' 
+  height='500px' 
+  style='border:none;'>
+</iframe>
+:::
+
+::::
+
+---
+
 # Bibliography
 <div id="refs"></div>
