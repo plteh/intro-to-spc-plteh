@@ -304,16 +304,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const clone = element.cloneNode(true);
 
-    // For lazy-loaded Reveal videos/iframes using data-src
-    if (clone.tagName === 'VIDEO' && clone.dataset.src && !clone.src) {
-      clone.src = clone.dataset.src;
-      clone.removeAttribute('data-src');
-      clone.setAttribute('controls', 'controls');
-    }
-    if (clone.tagName === 'IFRAME' && clone.dataset.src && !clone.src) {
-      clone.src = clone.dataset.src;
-      clone.removeAttribute('data-src');
-    }
+// Handle Reveal.js lazy-loaded videos
+if (clone.tagName === 'VIDEO') {
+  // If Reveal hasn't loaded it yet
+  if (clone.dataset.src && !clone.src) {
+    clone.src = clone.dataset.src;
+    clone.removeAttribute('data-src');
+  }
+
+  // Ensure controls + muted autoplay
+  clone.setAttribute('controls', 'controls');
+  clone.muted = true;
+
+  // Play once metadata is ready
+  clone.addEventListener('loadeddata', () => {
+    clone.play().catch(() => {});
+  });
+}
+
+// Handle Reveal.js lazy-loaded iframes (Plotly)
+if (clone.tagName === 'IFRAME') {
+  if (clone.dataset.src && !clone.src) {
+    clone.src = clone.dataset.src;
+    clone.removeAttribute('data-src');
+  }
+}
+
 
     frameWrapper.appendChild(closeBtn);
     frameWrapper.appendChild(clone);
