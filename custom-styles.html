@@ -187,6 +187,21 @@ function toggleNavMenu() {
   });
 </script>
 
+<style>
+/* Mobile layout: stack media ABOVE text */
+@media (max-width: 768px) {
+  .columns {
+    display: flex !important;
+    flex-direction: column-reverse !important;
+  }
+
+  .columns .column {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+}
+</style>
+
 <!-- =============================== -->
 <!-- ⭐ UNIVERSAL BROWSER-FILL OVERLAY (PLOTS + IMAGES + VIDEOS) ⭐ -->
 <!-- =============================== -->
