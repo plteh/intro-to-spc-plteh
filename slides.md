@@ -1,3 +1,4 @@
+
 ---
 title-slide: false
 bibliography: references.bib
@@ -16,7 +17,7 @@ hash: true
 ## Sample slides
 #### PlaceHolderName
 #### Universiti Malaysia Perlis
-#### [placeholder@email.com](mailto:placeholder@email.com)
+#### [placeholder@email.com](placeholder@email.com)
 
 <audio id="bg-music" src="media/audio/sb.m4a" loop></audio>
 

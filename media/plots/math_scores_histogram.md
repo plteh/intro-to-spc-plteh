@@ -1,26 +1,12 @@
-# R Code for Math Scores Histogram
 
-```R
-library(tidyverse)
-library(plotly)
+p_math_histogram <- bigclass %>%
+  plot_ly(x = ~Math, type = 'histogram',
+          marker = list(color = '#0072B2', line = list(color = 'white', width = 1))) %>%
+  layout(title = list(text = 'Distribution of Math Scores', font = list(size = 20)),
+         xaxis = list(title = list(text = 'Math Score', font = list(size = 18)), tickfont = list(size = 14)),
+         yaxis = list(title = list(text = 'Frequency', font = list(size = 18)), tickfont = list(size = 14)),
+         plot_bgcolor = 'white',
+         paper_bgcolor = 'white')
 
-p <- ggplot(bigclass, aes(x = Math)) +
-  geom_histogram(binwidth = 50, fill = '#0072B2', color = 'white', alpha = 0.8) +
-  labs(
-    title = 'Distribution of Math Scores',
-    x = 'Math Scores',
-    y = 'Frequency (count)'
-  ) +
-  theme_minimal() +
-  theme(
-    plot.title = element_text(size = 20, face = 'bold'),
-    axis.title.x = element_text(size = 18),
-    axis.title.y = element_text(size = 18),
-    axis.text.x = element_text(size = 14),
-    axis.text.y = element_text(size = 14),
-    panel.background = element_rect(fill = 'white', colour = 'white'),
-    plot.background = element_rect(fill = 'white', colour = 'white')
-  )
-
-htmlwidgets::saveWidget(plotly::ggplotly(p), 'media/plots/math_scores_histogram.html', selfcontained = TRUE)
-```
+# Save the plot as an HTML widget
+htmlwidgets::saveWidget(p_math_histogram, 'media/plots/math_scores_histogram.html', selfcontained = TRUE)
