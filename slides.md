@@ -191,5 +191,26 @@ This boxplot visualizes the distribution of Verbal scores, providing insights in
 
 ---
 
+
+---
+
+:::: {.columns}
+::: {.column width="50%"}
+### Math Scores vs. Age
+
+This scatter plot visualizes the relationship between students' Math scores and their age, with points colored by gender. It helps in identifying any trends or clusters related to age and gender in mathematical performance.
+:::
+
+::: {.column width="50%"}
+<iframe
+  data-src='media/plots/math_vs_age_scatterplot.html'
+  width='100%'
+  height='500px'
+  style='border:none;'>
+</iframe>
+:::
+
+::::
+
 # Bibliography
 <div id="refs"></div>
