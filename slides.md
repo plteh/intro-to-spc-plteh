@@ -212,5 +212,26 @@ This scatter plot visualizes the relationship between students' Math scores and 
 
 ::::
 
+
+---
+
+:::: {.columns}
+::: {.column width="50%"}
+### Verbal Scores by Gender
+
+This bar chart illustrates the average Verbal scores for male and female students. It provides a clear comparison of verbal performance between genders in the dataset.
+:::
+
+::: {.column width="50%"}
+<iframe
+  data-src='media/plots/verbal_gender_bar_chart.html'
+  width='100%'
+  height='500px'
+  style='border:none;'>
+</iframe>
+:::
+
+::::
+
 # Bibliography
 <div id="refs"></div>
