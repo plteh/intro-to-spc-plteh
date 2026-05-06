@@ -233,9 +233,6 @@ This bar chart illustrates the average Verbal scores for male and female student
 
 ::::
 
-# Bibliography
-<div id="refs"></div>
-
 ---
 
 :::: {.columns}
