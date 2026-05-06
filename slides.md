@@ -235,3 +235,23 @@ This bar chart illustrates the average Verbal scores for male and female student
 
 # Bibliography
 <div id="refs"></div>
+
+---
+
+:::: {.columns}
+::: {.column width="50%"}
+### Distribution of Student Ages
+
+This histogram illustrates the distribution of ages among students in the `bigclass` dataset. It provides a visual representation of how student ages are spread, helping to identify common age groups and any outliers.
+:::
+
+::: {.column width="50%"}
+<iframe
+  data-src='media/plots/age_histogram.html'
+  width='100%'
+  height='500px'
+  style='border:none;'>
+</iframe>
+:::
+
+::::
